@@ -12,7 +12,7 @@
 
 <p>This component demonstrates showing data.</p>
 
-@if (forecasts == null)
+@if (data == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -21,20 +21,24 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>City</th>
+                <th>Temperature</th>
+                <th>Humidity</th>
+                <th>Pressure</th>
+                <th>Weather</th>
+                <th>WindSpeed</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var x in data)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@x.city</td>
+                    <td>@x.temperature</td>
+                    <td>@x.humidity</td>
+                    <td>@x.pressure</td>
+                    <td>@x.weather</td>
+                    <td>@x.windSpeed</td>
                 </tr>
             }
         </tbody>
@@ -42,31 +46,34 @@ else
 }
 
 @code {
+
     private WeatherForecast[]? forecasts;
+
+    IEnumerable<WeatherData> data = null;
 
     protected override async Task OnInitializedAsync()
     {
         var response = await httpClient.GetAsync("https://localhost:44367/api/weather/all");
 
-        var data = Helper.ReadResponseMessage<IEnumerable<WeatherData>>(response);
-
-
+        data = Helper.ReadResponseMessage<IEnumerable<WeatherData>>(response);
 
         //var data2 = JsonConvert.DeserializeObject<IEnumerable<WeatherData>>(response.Content.ReadAsStringAsync().Result);
 
-        await InvokeAsync(StateHasChanged);
+        // await InvokeAsync(StateHasChanged);
 
 
-        await Task.Delay(500);
+        // await Task.Delay(500);
 
-        var startDate = DateOnly.FromDateTime(DateTime.Now);
-        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        {
-            Date = startDate.AddDays(index),
-            TemperatureC = Random.Shared.Next(-20, 55),
-            Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
+        // var startDate = DateOnly.FromDateTime(DateTime.Now);
+
+        // var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+
+        // forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+        // {
+        //     Date = startDate.AddDays(index),
+        //     TemperatureC = Random.Shared.Next(-20, 55),
+        //     Summary = summaries[Random.Shared.Next(summaries.Length)]
+        // }).ToArray();
     }
 
     private class WeatherForecast
