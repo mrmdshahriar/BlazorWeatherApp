@@ -104,17 +104,17 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await httpClient.GetAsync("https://localhost:44367/api/weather/all");
+        try
+        {
+            var response = await httpClient.GetAsync("https://localhost:44367/api/weather/all");
 
-        data = Helper.ReadResponseMessage<IEnumerable<WeatherData>>(response);
+            data = Helper.ReadResponseMessage<IEnumerable<WeatherData>>(response);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error : " + ex.Message);
+        }
     }
-
-    // public async Task ViewCity()
-    // {
-    //     var response = await httpClient.GetAsync("https://localhost:44367/api/weather/city/Aberdeen");
-
-    //     city = Helper.ReadResponseMessage<WeatherData>(response);
-    // }
 }
 
 
