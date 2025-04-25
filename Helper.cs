@@ -2,7 +2,7 @@
 using System.Text;
 using System.Globalization;
 
-namespace HIS.Client
+namespace BlazorWeatherApp
 {
     public static class Helper
     {

@@ -1,6 +1,7 @@
 ﻿@page "/weather"
 @using BlazorWeatherApp.Models
-@using HIS.Client
+@* @using HIS.Client *@
+@using Newtonsoft.Json
 @attribute [StreamRendering]
 @inject HttpClient httpClient
 
@@ -47,13 +48,15 @@ else
     {
         var response = await httpClient.GetAsync("https://localhost:44367/api/weather/all");
 
-        var data = Helper.ReadResponseMessage<WeatherData>(response);
+        var data = Helper.ReadResponseMessage<IEnumerable<WeatherData>>(response);
+
+
+
+        //var data2 = JsonConvert.DeserializeObject<IEnumerable<WeatherData>>(response.Content.ReadAsStringAsync().Result);
 
         await InvokeAsync(StateHasChanged);
 
 
-
-        // Simulate asynchronous loading to demonstrate streaming rendering
         await Task.Delay(500);
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);

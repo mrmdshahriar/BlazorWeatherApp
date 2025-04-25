@@ -2,11 +2,11 @@
 {
     public class WeatherData
     {
-        public string City { get; set; } = "";
-        public double Temperature { get; set; }
-        public int Humidity { get; set; }
-        public int Pressure { get; set; }
-        public string Weather { get; set; } = "";
-        public double WindSpeed { get; set; }
+        public string city { get; set; } = "";
+        public double temperature { get; set; }
+        public int humidity { get; set; }
+        public int pressure { get; set; }
+        public string weather { get; set; } = "";
+        public double windSpeed { get; set; }
     }
 }
