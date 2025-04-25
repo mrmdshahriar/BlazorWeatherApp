@@ -1,17 +1,58 @@
 ﻿@page "/ViewByWeather"
 @using BlazorWeatherApp.Models
 @inject HttpClient httpClient
+@rendermode InteractiveServer
 
-<PageTitle>ViewByWeather</PageTitle>
+<PageTitle>View By Weather</PageTitle>
 
-<h1>Hello, ViewByWeather!</h1>
+<h1>View By Weather!</h1>
 
-<h2>Welcome in Weather App</h2>
+<div class="row" style="padding:30px;display:flex;align-items:center;justify-content:left;">
+    <div class="col-md-6">
+        <input @bind-value="weather" class="form-control" type="text" style="width:200px;display:inline-block;" />
+        <input type="button" class="btn btn-primary" @onclick="SearchByCity" value="Search By City" />
+    </div>
+</div>
+<table class="table table-bordered table-striped" id="myTable">
+    <thead style="background-color:#3939b7;color:white;">
+        <tr>
+            <th>City</th>
+            <th>Temperature</th>
+            <th>Humidity</th>
+            <th>Pressure</th>
+            <th>Weather</th>
+            <th>WindSpeed</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in weatherList)
+        {
+            <tr>
+                <td>@x.city</td>
+                <td>@x.temperature</td>
+                <td>@x.humidity</td>
+                <td>@x.pressure</td>
+                <td>@x.weather</td>
+                <td>@x.windSpeed</td>
+            </tr>
+        }
+    </tbody>
+</table>
 
-@code{
+@code {
+    public string weather = "";
+
+    IEnumerable<WeatherData> weatherList = null;
 
     protected override async Task OnInitializedAsync()
     {
+        weatherList = new List<WeatherData>();
+    }
 
+    public async Task SearchByCity()
+    {
+        var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + weather);
+
+        weatherList = Helper.ReadResponseMessage<List<WeatherData>>(response);
     }
 }
