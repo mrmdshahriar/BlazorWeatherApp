@@ -1,24 +1,20 @@
 ﻿@page "/weather"
 @using BlazorWeatherApp.Models
-@* @using HIS.Client *@
 @using Newtonsoft.Json
 @attribute [StreamRendering]
 @inject HttpClient httpClient
-
 
 <PageTitle>Weather</PageTitle>
 
 <h1>Weather</h1>
 
-<p>This component demonstrates showing data.</p>
-
 @if (data == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Loading Please Wait...</em></p>
 }
 else
 {
-    <table class="table">
+    <table class="table" id="myTable">
         <thead>
             <tr>
                 <th>City</th>
@@ -47,8 +43,6 @@ else
 
 @code {
 
-    private WeatherForecast[]? forecasts;
-
     IEnumerable<WeatherData> data = null;
 
     protected override async Task OnInitializedAsync()
@@ -56,31 +50,11 @@ else
         var response = await httpClient.GetAsync("https://localhost:44367/api/weather/all");
 
         data = Helper.ReadResponseMessage<IEnumerable<WeatherData>>(response);
-
-        //var data2 = JsonConvert.DeserializeObject<IEnumerable<WeatherData>>(response.Content.ReadAsStringAsync().Result);
-
-        // await InvokeAsync(StateHasChanged);
-
-
-        // await Task.Delay(500);
-
-        // var startDate = DateOnly.FromDateTime(DateTime.Now);
-
-        // var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
-
-        // forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
-        // {
-        //     Date = startDate.AddDays(index),
-        //     TemperatureC = Random.Shared.Next(-20, 55),
-        //     Summary = summaries[Random.Shared.Next(summaries.Length)]
-        // }).ToArray();
-    }
-
-    private class WeatherForecast
-    {
-        public DateOnly Date { get; set; }
-        public int TemperatureC { get; set; }
-        public string? Summary { get; set; }
-        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
 }
+
+<script>
+
+    let table = new DataTable('#myTable');
+
+</script>
