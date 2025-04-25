@@ -11,7 +11,7 @@
 <div class="row" style="padding:30px;display:flex;align-items:center;justify-content:left;">
     <div class="col-md-6">
         <input @bind-value="weather" class="form-control" type="text" style="width:200px;display:inline-block;" />
-        <input type="button" class="btn btn-primary" @onclick="SearchByCity" value="Search By City" />
+        <input type="button" class="btn btn-primary" @onclick="ViewByWeatherReport" value="View By Weather" />
     </div>
 </div>
 <table class="table table-bordered table-striped" id="myTable">
@@ -40,6 +40,14 @@
     </tbody>
 </table>
 
+@* <script>
+    function DataTable() {
+     $(document).ready(function () {
+      $('#myTable').DataTable();
+     });
+    }
+</script> *@
+
 @code {
     public string weather = "";
 
@@ -50,7 +58,17 @@
         weatherList = new List<WeatherData>();
     }
 
-    public async Task SearchByCity()
+    // protected override async Task OnAfterRenderAsync(bool firstRender)
+    // {
+    //     if (firstRender)
+    //     {
+    //         var jQuery = await JSRuntime.InvokeAsync<IJSObjectReference>("$", "table");
+    //         await jQuery.InvokeVoidAsync("DataTable");
+    //     }
+    // }
+
+
+    public async Task ViewByWeatherReport()
     {
         var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + weather);
 
