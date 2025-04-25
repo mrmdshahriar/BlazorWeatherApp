@@ -15,10 +15,10 @@
 }
 else
 {
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <button type="button" onclick="viewCity()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         View City
     </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <button type="button" onclick="viewByWeather()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         View By Weather
     </button>
 
@@ -47,9 +47,22 @@ else
             }
         </tbody>
     </table>
+
     <script>
 
         let table = new DataTable('#myTable');
+
+        function viewCity(){
+            debugger;
+            alert("lslsl");
+
+        }
+
+        function viewByWeather(){
+            debugger;
+            alert("lslsl6666");
+
+        }
 
     </script>
 }
@@ -72,6 +85,8 @@ else
         </div>
     </div>
 </div>
+
+
 
 @code {
 
