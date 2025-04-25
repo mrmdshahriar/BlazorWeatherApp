@@ -4,7 +4,6 @@
 @attribute [StreamRendering]
 @inject HttpClient httpClient
 
-
 <PageTitle>Weather</PageTitle>
 
 <h1>Weather</h1>
@@ -15,12 +14,12 @@
 }
 else
 {
-    <button type="button" onclick="viewCity()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+@*     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         View City
     </button>
     <button type="button" onclick="viewByWeather()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
         View By Weather
-    </button>
+    </button> *@
 
     <table class="table table-bordered table-striped" id="myTable">
         <thead style="background-color:#3939b7;color:white;">
@@ -35,36 +34,46 @@ else
         </thead>
         <tbody>
             @foreach (var x in data)
-            {
-                <tr>
-                    <td>@x.city</td>
-                    <td>@x.temperature</td>
-                    <td>@x.humidity</td>
-                    <td>@x.pressure</td>
-                    <td>@x.weather</td>
-                    <td>@x.windSpeed</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-
-    <script>
-
-        let table = new DataTable('#myTable');
-
-        function viewCity(){
-            debugger;
-            alert("lslsl");
-
+        {
+            <tr>
+                <td>@x.city</td>
+                <td>@x.temperature</td>
+                <td>@x.humidity</td>
+                <td>@x.pressure</td>
+                <td>@x.weather</td>
+                <td>@x.windSpeed</td>
+            </tr>
         }
+    </tbody>
+</table>
 
-        function viewByWeather(){
-            debugger;
-            alert("lslsl6666");
+<script>
 
-        }
+    $('#myTable').DataTable(); 
 
-    </script>
+    function viewCity(){
+    debugger;
+    $.ajax({
+    url:"https://localhost:44367/api/weather/city/Aberdeen",
+    type:"GET",
+    success:function(data){
+    debugger;
+    console.log(data);
+    },
+    error: function(e){
+    console.log(e)
+    }
+    });
+
+    }
+
+    function viewByWeather(){
+    debugger;
+
+
+    }
+
+</script>
 }
 
 <!-- Modal -->
@@ -86,11 +95,9 @@ else
     </div>
 </div>
 
-
-
 @code {
-
     IEnumerable<WeatherData> data = null;
+    WeatherData city = null;
 
     protected override async Task OnInitializedAsync()
     {
@@ -98,6 +105,14 @@ else
 
         data = Helper.ReadResponseMessage<IEnumerable<WeatherData>>(response);
     }
+
+    // public async Task ViewCity()
+    // {
+    //     var response = await httpClient.GetAsync("https://localhost:44367/api/weather/city/Aberdeen");
+
+    //     city = Helper.ReadResponseMessage<WeatherData>(response);
+    // }
 }
+
 
 
