@@ -1,17 +1,80 @@
 ﻿@page "/CityView"
 @using BlazorWeatherApp.Models
 @inject HttpClient httpClient
+@rendermode InteractiveServer
 
 <PageTitle>CityView</PageTitle>
+<div class="row" style="padding:30px;display:flex;align-items:center;justify-content:left;">
+    <div class="col-md-6">
+        <input @bind-value="cityName" class="form-control" type="text" style="width:200px;display:inline-block;" />
+        <input type="button" class="btn btn-primary" @onclick="SearchByCity" value="Search By City" />
+    </div>
+</div>
+<table class="table table-striped table-bordered" style="width:50%">
+    <tr>
+        <th>
+            City
+        </th>
+        <th>
+            @city.city
+        </th>
+    </tr>
+    <tr>
+        <th>
+            Temperature
+        </th>
+        <th>
+            @city.temperature
+        </th>
+    </tr>
+    <tr>
+        <th>
+            Humidity
+        </th>
+        <th>
+            @city.humidity
+        </th>
+    </tr>
+    <tr>
+        <th>
+            Pressure
+        </th>
+        <th>
+            @city.pressure
+        </th>
+    </tr>
+    <tr>
+        <th>
+            Weather
+        </th>
+        <th>
+            @city.weather
+        </th>
+    </tr>
+    <tr>
+        <th>
+            WindSpeed
+        </th>
+        <th>
+            @city.windSpeed
+        </th>
+    </tr>
+</table>
 
-<h1>Hello, CityView!</h1>
-
-<h2>Welcome in Weather App</h2>
 
 @code{
+    public string cityName = "";
+    WeatherData city = null;
 
     protected override async Task OnInitializedAsync()
     {
+        city = new WeatherData();
+    }
 
+    public async Task SearchByCity()
+    {
+        var response = await httpClient.GetAsync("https://localhost:44367/api/weather/city/" + cityName);
+
+        city = Helper.ReadResponseMessage<WeatherData>(response);
     }
 }
