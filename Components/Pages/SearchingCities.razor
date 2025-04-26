@@ -10,7 +10,7 @@
 
 <div class="row" style="padding:30px;display:flex;align-items:center;justify-content:left;">
     <div class="col-md-6">
-        <input @bind-value="weather" class="form-control" type="text" style="width:200px;display:inline-block;" />
+        <input @bind-value="cityName" class="form-control" type="text" style="width:200px;display:inline-block;" />
         <input type="button" class="btn btn-primary" @onclick="SearchingCitiesReport" value="Searching Cities" />
     </div>
 </div>
@@ -49,7 +49,7 @@
 </script> *@
 
 @code {
-    public string weather = "";
+    public string cityName = "";
 
     IEnumerable<WeatherData> weatherList = null;
 
@@ -72,7 +72,7 @@
     {
         try
         {
-            var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + weather);
+            var response = await httpClient.GetAsync("https://localhost:44367/api/weather/search?query=" + cityName);
 
             weatherList = Helper.ReadResponseMessage<List<WeatherData>>(response);
         }
