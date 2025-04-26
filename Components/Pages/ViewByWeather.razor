@@ -3,10 +3,44 @@
 @inject HttpClient httpClient
 @rendermode InteractiveServer
 @inject IJSRuntime JSRuntime
+@using Microsoft.AspNetCore.Components.QuickGrid
 
 <PageTitle>View By Weather</PageTitle>
 
 <h1>View By Weather!</h1>
+
+<style>
+
+    .quickgrid{
+    width:100%;
+    }
+
+    thead{
+    background-color: #c0c0ed;
+    height: 40px;
+    font-size: 20px;
+    }
+
+    tbody tr:nth-child(even) {
+    background: rgb(170 217 217 / 40%);
+    }
+
+    tbody tr td{
+    height: 40px;
+    font-size:20px;
+    }
+    .page-size-chooser {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    }
+
+    .page-size-chooser select {
+    margin: 0 1rem;
+    padding: 0.25rem 0.5rem;
+    }
+
+</style>
 
 <div class="row" style="padding:30px;display:flex;align-items:center;justify-content:left;">
     <div class="col-md-6">
@@ -14,72 +48,54 @@
         <input type="button" class="btn btn-primary" @onclick="ViewByWeatherReport" value="View By Weather" />
     </div>
 </div>
-<table class="table table-bordered table-striped" id="myTable">
-    <thead style="background-color:#3939b7;color:white;">
-        <tr>
-            <th>City</th>
-            <th>Temperature</th>
-            <th>Humidity</th>
-            <th>Pressure</th>
-            <th>Weather</th>
-            <th>WindSpeed</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var x in weatherList)
-        {
-            <tr>
-                <td>@x.city</td>
-                <td>@x.temperature</td>
-                <td>@x.humidity</td>
-                <td>@x.pressure</td>
-                <td>@x.weather</td>
-                <td>@x.windSpeed</td>
-            </tr>
-        }
-    </tbody>
-</table>
 
-@* <script>
-    function DataTable() {
-     $(document).ready(function () {
-      $('#myTable').DataTable();
-     });
-    }
-</script> *@
+<div class="page-size-chooser">
+    Items per page:
+    <select @bind="@pagination.ItemsPerPage">
+        <option>5</option>
+        <option>10</option>
+        <option>20</option>
+        <option>50</option>
+    </select>
+</div>
+
+<div class="grid">
+    <QuickGrid Items="weatherList" Pagination="@pagination">
+        <PropertyColumn Property="@(p => p.city)" Sortable="true" />
+        <PropertyColumn Property="@(p => p.temperature)" Sortable="true" />
+        <PropertyColumn Property="@(p => p.humidity)" Sortable="true" />
+        <PropertyColumn Property="@(p => p.pressure)" Sortable="true" />
+        <PropertyColumn Property="@(p => p.weather)" Sortable="true" />
+        <PropertyColumn Property="@(p => p.windSpeed)" Sortable="true" />
+    </QuickGrid>
+</div>
+<Paginator State="@pagination" />
 
 @code {
     public string weather = "";
 
-    IEnumerable<WeatherData> weatherList = null;
+    IQueryable<WeatherData> weatherList;
+
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
 
     protected override async Task OnInitializedAsync()
     {
-        weatherList = new List<WeatherData>();
+        weatherList = new List<WeatherData>().AsQueryable();
     }
-
-    // protected override async Task OnAfterRenderAsync(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         var jQuery = await JSRuntime.InvokeAsync<IJSObjectReference>("$", "table");
-    //         await jQuery.InvokeVoidAsync("DataTable");
-    //     }
-    // }
-
 
     public async Task ViewByWeatherReport()
     {
         try
         {
-            var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + weather);
+            var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + weather.Trim());
 
-            weatherList = Helper.ReadResponseMessage<List<WeatherData>>(response);
+            var list = Helper.ReadResponseMessage<List<WeatherData>>(response);
+
+            weatherList = list.AsQueryable();
         }
         catch(Exception ex)
         {
             Console.WriteLine("Error : " + ex.Message);
         }
-
     }
 }
