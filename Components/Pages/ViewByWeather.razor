@@ -44,7 +44,17 @@
 
 <div class="row" style="padding:30px;display:flex;align-items:center;justify-content:left;">
     <div class="col-md-6">
-        <input @bind-value="weather" class="form-control" type="text" style="width:200px;display:inline-block;" />
+        @* <input @bind-value="weather" class="form-control" type="text" style="width:200px;display:inline-block;" /> *@
+
+        <select class="form-control" @onchange="(x => DropDownChange(x))" style="width:200px;display:inline-block">
+            <option disabled>--Select One--</option>
+            <option>Rain</option>
+            <option>Clear</option>
+            <option>Thunderstorm</option>
+            <option>Drizzle</option>
+            <option>Cloudy</option>
+        </select>
+
         <input type="button" class="btn btn-primary" @onclick="ViewByWeatherReport" value="View By Weather" />
     </div>
 </div>
@@ -74,6 +84,8 @@
 @code {
     public string weather = "";
 
+    public string DropDownValue = "";
+
     IQueryable<WeatherData> weatherList;
 
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
@@ -81,13 +93,23 @@
     protected override async Task OnInitializedAsync()
     {
         weatherList = new List<WeatherData>().AsQueryable();
+
+        await base.OnInitializedAsync();
+    }
+
+    public void DropDownChange(ChangeEventArgs args)
+    {
+        if (args.Value != null)
+        {
+            DropDownValue = args.Value?.ToString();
+        }      
     }
 
     public async Task ViewByWeatherReport()
     {
         try
         {
-            var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + weather.Trim());
+            var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + DropDownValue.Trim());
 
             var list = Helper.ReadResponseMessage<List<WeatherData>>(response);
 
