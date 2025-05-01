@@ -107,17 +107,21 @@
 
     public async Task ViewByWeatherReport()
     {
-        try
+        if (DropDownValue != "")
         {
-            var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + DropDownValue.Trim());
+            try
+            {
+                var response = await httpClient.GetAsync("https://localhost:44367/api/weather/weather/" + DropDownValue.Trim());
 
-            var list = Helper.ReadResponseMessage<List<WeatherData>>(response);
+                var list = Helper.ReadResponseMessage<List<WeatherData>>(response);
 
-            weatherList = list.AsQueryable();
+                weatherList = list.AsQueryable();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error : " + ex.Message);
+            }
         }
-        catch(Exception ex)
-        {
-            Console.WriteLine("Error : " + ex.Message);
-        }
+
     }
 }
