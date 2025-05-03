@@ -4,6 +4,9 @@
 
 <PageTitle>Counter</PageTitle>
 
+<img id="imgId" src="" width="200" height="200" border="1px solid red;"/>
+
+
 
 <button class="btn btn-primary" @onclick="ServerSideReload">Server Side Reload</button>
 
@@ -2900,6 +2903,43 @@
 
 </div>
 
+
+<input type="button" onclick="Download2();" value="Download2" />
+
+
+
+<div id="htmlDiv">
+
+<style>
+
+  td{
+     border: 1px solid red;
+     padding:5px 15px;
+  }
+</style>
+
+    <h2>Jslslslslsl</h2>
+
+<table id="tableId" class="table">
+<tr>
+  <td style="border:1px solid red;">Jenny</td><td>Zainab</td>
+</tr>
+<tr>
+  <td>Jenny</td><td>Zainab</td>
+</tr>
+</table>
+
+<table id="tableId" class="table">
+<tr>
+  <td>Jenny2222</td><td>Zainab</td>
+</tr>
+<tr>
+  <td>Jenny</td><td>Zainab66666</td>
+</tr>
+</table>
+
+</div>
+
 <script>
 
     debugger;
@@ -3012,6 +3052,19 @@
     a.download = "Tooth Details.svg";
     a.click();
  }
+
+
+        function Download2(){
+           debugger;
+         var htmlDivId = document.getElementById("htmlDiv");
+
+         var datas = "data:image/svg+xml;base64," + btoa(new XMLSerializer().serializeToString(htmlDivId));
+
+         var a = document.createElement("a");
+         a.href = datas;
+         a.download = "Tooth Details.svg";
+         a.click(); 
+      }
 
 
 </script>
